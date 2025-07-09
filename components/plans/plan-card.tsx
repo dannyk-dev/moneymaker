@@ -2,6 +2,7 @@ import React from "react";
 import { IPlan } from "../../utils/types";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -30,18 +31,18 @@ const PlanCard = ({ plan }: Props) => {
         </div>
         <PlanActions plan={plan} />
       </div>
-      <div className="grid gap-2 mt-2 text-sm">
+      <CardContent className="grid gap-2 mt-2 text-sm px-0">
         <div className="grid grid-cols-[150px_1fr]"></div>
-        <div className="grid grid-cols-[150px_1fr]">
+        <div className="grid grid-cols-[150px_1fr] ">
           <div className="text-muted-foreground">Price</div>
-          <div>
+          <div className="ml-auto">
             $ {plan.billing_cycles[0].pricing_scheme.fixed_price.value} per{" "}
             {plan.billing_cycles[0].frequency.interval_unit.toLowerCase()}
           </div>
         </div>
         <div className="grid grid-cols-[150px_1fr]">
           <div className="text-muted-foreground">Cycle</div>
-          <div>
+          <div className="ml-auto">
             Every {plan.billing_cycles[0].frequency.interval_count}{" "}
             {plan.billing_cycles[0].frequency.interval_unit.toLowerCase()}{" "}
             {plan.billing_cycles[0].frequency.interval_count > 1 ? "s" : ""}
@@ -49,13 +50,13 @@ const PlanCard = ({ plan }: Props) => {
         </div>
         <div className="grid grid-cols-[150px_1fr]">
           <div className="text-muted-foreground">Status</div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-auto">
             <Badge variant={getPlanStatusLabel(plan.status).variant}>
               {getPlanStatusLabel(plan.status).label}
             </Badge>
           </div>
         </div>
-      </div>
+      </CardContent>
     </Card>
   );
 };

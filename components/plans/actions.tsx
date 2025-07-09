@@ -21,7 +21,8 @@ import {
   WalletCards,
 } from "lucide-react";
 import Link from "next/link";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
+import { toast } from "sonner";
 
 type Props = {
   plan: IPlan;
@@ -29,6 +30,14 @@ type Props = {
 
 const PlanActions = ({ plan }: Props) => {
   const isPlanActive = useMemo(() => plan.status === "ACTIVE", [plan]);
+
+  // const handleActivation = useCallback(async () => {
+  //   const response = await fetch(`/api/paypal/plans/${isPlanActive ? 'deactivate' : 'activate'}`);
+
+  //   if (response.ok) {
+  //     toast(response)
+  //   }
+  // }, [isPlanActive]);
 
   return (
     <DropdownMenu>

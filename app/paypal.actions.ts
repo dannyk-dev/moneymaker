@@ -1,3 +1,4 @@
+import GenericError from "@/utils/error";
 import { getPayPalClient } from "@/utils/paypal/client";
 import {
   IProductRequest,
@@ -6,6 +7,7 @@ import {
   ISubscriptionRequest,
   ISubscriptionResponse,
 } from "@/utils/types";
+import { revalidatePath } from "next/cache";
 
 export async function getSubscriptions() {
   const client = await getPayPalClient();
@@ -70,4 +72,28 @@ export async function createSubscriptionPlan({
   }
 
   return false;
+}
+
+export async function planActivator(planId: string, activate: boolean = true) {
+  try {
+    const client = await getPayPalClient();
+    const activationRoute = activate ? "activate" : "deactivate";
+
+    const response = await client.post(
+      `/v1/billing/plans/${planId}/${activationRoute}`
+    );
+
+    if (response.status === 204) {
+      revalidatePath("admin/subscription");
+      return true;
+    }
+
+    throw new GenericError("Failed to update subscription status", 500);
+  } catch (error) {
+    if (error instanceof GenericError) {
+      throw error;
+    }
+
+    throw new GenericError();
+  }
 }
