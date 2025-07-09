@@ -49,7 +49,7 @@ const schema = z.object({
   price: z.number().min(1),
 });
 
-const CreatePlan = (props: Props) => {
+const CreatePlan = () => {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();

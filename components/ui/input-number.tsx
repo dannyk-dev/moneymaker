@@ -7,7 +7,6 @@ import {
   Button,
   Group,
   Input,
-  Label,
   NumberField,
   NumberFieldProps,
 } from "react-aria-components";

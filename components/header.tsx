@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { createSupabaseClient } from "@/utils/supabase/server";
 
 export default async function Header() {
