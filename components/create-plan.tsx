@@ -42,7 +42,7 @@ type Props = {};
 
 const schema = z.object({
   name: z.string().min(1),
-  status: z.nativeEnum(SubscriptionStatus),
+  status: z.enum(['CREATED', 'ACTIVE', 'INACTIVE']),
   interval_unit: z.enum(["DAY", "WEEK", "MONTH", "YEAR"]),
   interval_count: z.number().default(1),
   total_cycles: z.number().default(1),
@@ -56,7 +56,7 @@ const CreatePlan = (props: Props) => {
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
-      status: SubscriptionStatus.ACTIVE,
+      status: 'ACTIVE',
       interval_unit: "MONTH",
       interval_count: 1,
       total_cycles: 6,
@@ -148,13 +148,13 @@ const CreatePlan = (props: Props) => {
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
-                        defaultValue={field.value.toString()}
+                        defaultValue={field.value}
                         className="flex gap-x-4 items-baseline"
                       >
                         <FormItem className="flex items-center gap-3">
                           <FormControl>
                             <RadioGroupItem
-                              value={SubscriptionStatus.ACTIVE.toString()}
+                              value="ACTIVE"
                             />
                           </FormControl>
                           <FormLabel className="font-normal">Active</FormLabel>
@@ -162,7 +162,7 @@ const CreatePlan = (props: Props) => {
                         <FormItem className="flex items-center gap-3">
                           <FormControl>
                             <RadioGroupItem
-                              value={SubscriptionStatus.CREATED.toString()}
+                              value="CREATED"
                             />
                           </FormControl>
                           <FormLabel className="font-normal">Idle</FormLabel>
@@ -170,7 +170,7 @@ const CreatePlan = (props: Props) => {
                         <FormItem className="flex items-center gap-3">
                           <FormControl>
                             <RadioGroupItem
-                              value={SubscriptionStatus.INACTIVE.toString()}
+                              value="INACTIVE"
                             />
                           </FormControl>
                           <FormLabel className="font-normal">

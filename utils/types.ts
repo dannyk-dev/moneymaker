@@ -9,9 +9,9 @@ export interface IProductResponse extends IProductRequest {
 }
 
 export enum SubscriptionStatus {
-  CREATED,
-  INACTIVE,
-  ACTIVE,
+  CREATED = 'CREATED',
+  INACTIVE = 'INACTIVE',
+  ACTIVE = 'ACTIVE',
 }
 
 export type TIntervalUnit = "DAY" | "WEEK" | "MONTH" | "YEAR";
@@ -53,6 +53,13 @@ export interface IBillingCycle {
       value: string;
     };
   };
+}
+
+export interface ISubscriptionRequest {
+  product_id: string;
+  name: string;
+  status: 'CREATED' | 'ACTIVE' | 'INACTIVE';
+  billing_cycles: IBillingCycle[];
   payment_preferences?: {
     setup_fee_failure_action: "CONTINUE" | "CANCEL";
     payment_failure_threshold: number;
@@ -61,13 +68,6 @@ export interface IBillingCycle {
       value: string;
     };
   };
-}
-
-export interface ISubscriptionRequest {
-  product_id: string;
-  name: string;
-  status: SubscriptionStatus;
-  billing_cycle: IBillingCycle;
 }
 
 export interface ISubscriptionFormRequest

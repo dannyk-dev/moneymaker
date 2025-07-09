@@ -38,26 +38,30 @@ export async function createSubscriptionPlan({
     product_id: product.id,
     name,
     status,
-    billing_cycle: {
-      ...billing_cycle,
-      sequence: 1,
-      tenure_type: "REGULAR",
-      payment_preferences: {
-        payment_failure_threshold: 2,
-        setup_fee: {
-          currency_code: "USD",
-          value: "10",
-        },
-        setup_fee_failure_action: "CONTINUE",
+    billing_cycles: [
+      {
+        ...billing_cycle,
+        sequence: 1,
+        tenure_type: "REGULAR",
       },
+    ],
+    payment_preferences: {
+      payment_failure_threshold: 2,
+      setup_fee: {
+        currency_code: "USD",
+        value: "10",
+      },
+      setup_fee_failure_action: "CONTINUE",
     },
   };
+
+  console.log(subscriptionPayload);
 
   if (productStatus == 201) {
     try {
       const response = await client.post<ISubscriptionResponse>(
         "/v1/billing/plans",
-        [subscriptionPayload]
+        subscriptionPayload
       );
 
       if (response.status === 201) {
