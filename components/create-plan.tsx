@@ -38,8 +38,6 @@ import InputNumber from "./ui/input-number";
 import { Spinner } from "./ui/spinner";
 import { useRouter } from "next/navigation";
 
-type Props = {};
-
 const schema = z.object({
   name: z.string().min(1),
   status: z.enum(['CREATED', 'ACTIVE', 'INACTIVE']),
@@ -77,7 +75,7 @@ const CreatePlan = () => {
     setLoading(true);
     
     try {
-      const response = await fetch("/api/paypal/plans", {
+      await fetch("/api/paypal/plans", {
         body: JSON.stringify({
           name,
           status,

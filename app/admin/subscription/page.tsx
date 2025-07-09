@@ -3,7 +3,6 @@ import CreatePlan from "@/components/create-plan";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { getPlanStatusLabel } from "@/utils/constants";
-import { upperFirst } from 'scule'
 
 export default async function Page() {
   const subscriptions = await getSubscriptions();
