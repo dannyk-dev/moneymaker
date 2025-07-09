@@ -12,15 +12,15 @@ export async function getPayPalAccessToken(): Promise<string> {
 
   const clientId = process.env.PAYPAL_CLIENT_ID;
   const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
-  const baseUrl = process.env.PAYPAL_BASE_URL!;
+  const baseUrl = process.env.PAYPAL_BASE_URL;
 
-  if (!clientId || !clientSecret) throw Error("paypal credentials idiot!");
+  if (!clientId || !clientSecret || !baseUrl) throw Error("paypal credentials idiot!");
 
   const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString(
     "base64"
   );
 
-  const res = await fetch("https://api-m.sandbox.paypal.com/v1/oauth2/token", {
+  const res = await fetch(`${baseUrl}/v1/oauth2/token`, {
     method: "POST",
     headers: {
       Authorization: `Basic ${basicAuth}`,
@@ -41,7 +41,6 @@ export async function getPayPalAccessToken(): Promise<string> {
 
 export async function getPayPalClient() {
   const token = await getPayPalAccessToken();
-  console.log(token);
 
   return axios.create({
     baseURL: process.env.PAYPAL_BASE_URL!,
