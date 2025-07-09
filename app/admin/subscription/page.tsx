@@ -41,6 +41,7 @@ export default async function Page() {
             </div>
           </div>
         </Card>
+        {JSON.stringify(subscriptions)}
       </div>
     </div>
   );

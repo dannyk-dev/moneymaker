@@ -1,7 +1,7 @@
 "use client";
 
 import { INTERVAL_UNITS, SubscriptionStatus } from "@/utils/types";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,6 +35,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import InputNumber from "./ui/input-number";
+import { createSubscriptionPlan } from "@/app/paypal.actions";
+import { Spinner } from "./ui/spinner";
 
 type Props = {};
 
@@ -48,9 +50,12 @@ const schema = z.object({
 });
 
 const CreatePlan = (props: Props) => {
+  const [loading, setLoading] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
+      name: "",
       status: SubscriptionStatus.ACTIVE,
       interval_unit: "MONTH",
       interval_count: 1,
@@ -59,17 +64,61 @@ const CreatePlan = (props: Props) => {
     },
   });
 
+  const onSubmit = async ({
+    name,
+    status,
+    price,
+    interval_count,
+    interval_unit,
+    total_cycles,
+  }: z.infer<typeof schema>) => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/paypal/plans", {
+        body: JSON.stringify({
+          name,
+          status,
+          billing_cycle: {
+            frequency: {
+              interval_count,
+              interval_unit,
+            },
+            pricing_scheme: {
+              fixed_price: {
+                currency_code: "USD",
+                value: price.toString(),
+              },
+            },
+            total_cycles,
+          },
+        }),
+        method: "POST",
+      });
+
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Dialog>
-      <Form {...form}>
-        <form action="">
-          <DialogTrigger asChild>
-            <Button>
-              <PlusCircleIcon />
-              New Subscription
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
+      <DialogTrigger asChild>
+        <Button>
+          <PlusCircleIcon />
+          New Subscription
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit, (errors) =>
+              console.log(errors)
+            )}
+          >
             <DialogHeader>
               <DialogTitle>New Subscription</DialogTitle>
               <DialogDescription>
@@ -231,12 +280,12 @@ const CreatePlan = (props: Props) => {
             </div>
             <DialogFooter>
               <Button className="w-full mt-4" type="submit">
-                Save
+                {loading ? <Spinner isLoading={loading} /> : "Save"}
               </Button>
             </DialogFooter>
-          </DialogContent>
-        </form>
-      </Form>
+          </form>
+        </Form>
+      </DialogContent>
     </Dialog>
   );
 };

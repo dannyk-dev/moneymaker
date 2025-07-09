@@ -1,5 +1,3 @@
-"use server";
-
 import { getPayPalClient } from "@/utils/paypal/client";
 import {
   IProductRequest,
@@ -8,6 +6,7 @@ import {
   ISubscriptionRequest,
   ISubscriptionResponse,
 } from "@/utils/types";
+import { AxiosError } from "axios";
 
 export async function getSubscriptions() {
   const client = await getPayPalClient();
@@ -29,10 +28,11 @@ export async function createSubscriptionPlan({
     category: "SOFTWARE",
   };
 
-  const { data: product } = await client.post<IProductResponse>(
-    "/v1/catalog/products",
-    productPayload
-  );
+  const { data: product, status: productStatus } =
+    await client.post<IProductResponse>(
+      "/v1/catalogs/products",
+      productPayload
+    );
 
   const subscriptionPayload: ISubscriptionRequest = {
     product_id: product.id,
@@ -53,14 +53,20 @@ export async function createSubscriptionPlan({
     },
   };
 
-  const response = await client.post<ISubscriptionResponse>(
-    "/v1/billing/plans",
-    [subscriptionPayload]
-  );
+  if (productStatus == 201) {
+    try {
+      const response = await client.post<ISubscriptionResponse>(
+        "/v1/billing/plans",
+        [subscriptionPayload]
+      );
 
-  if (response.status === 201) {
-    console.log(response.data);
-    return true;
+      if (response.status === 201) {
+        console.log(response.data);
+        return true;
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
   return false;
