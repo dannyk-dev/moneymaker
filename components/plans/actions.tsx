@@ -20,6 +20,7 @@ import {
   ShieldX,
   WalletCards,
 } from "lucide-react";
+import Link from "next/link";
 import React, { useMemo } from "react";
 
 type Props = {
@@ -36,7 +37,7 @@ const PlanActions = ({ plan }: Props) => {
           <CircleEllipsis className="w-5 h-5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent align="start">
         <DropdownMenuLabel className="w-full flex gap-x-2 items-center ">
           <Activity /> Manage Plan
         </DropdownMenuLabel>
@@ -61,9 +62,11 @@ const PlanActions = ({ plan }: Props) => {
             Subscriptions
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuItem>
-              <BookUser />
-              View Subscriptions
+            <DropdownMenuItem asChild>
+              <Link href={`/admin/subscription/${plan.id}`}>
+                <BookUser />
+                View Subscriptions
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuSubContent>
         </DropdownMenuSub>
