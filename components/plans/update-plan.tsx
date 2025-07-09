@@ -1,8 +1,6 @@
 import React from "react";
 
-type Props = {};
-
-const UpdatePlan = (props: Props) => {
+const UpdatePlan = () => {
   return <div>UpdatePlan</div>;
 };
 

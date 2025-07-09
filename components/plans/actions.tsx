@@ -1,5 +1,3 @@
-import UpdatePlan from "@/components/plans/update-plan";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,7 +15,6 @@ import {
   Activity,
   BookUser,
   CircleEllipsis,
-  Coins,
   CreditCard,
   ShieldCheck,
   ShieldX,
