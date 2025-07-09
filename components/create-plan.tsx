@@ -1,6 +1,6 @@
 "use client";
 
-import { INTERVAL_UNITS, SubscriptionStatus } from "@/utils/types";
+import { INTERVAL_UNITS } from "@/utils/types";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -35,8 +35,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import InputNumber from "./ui/input-number";
-import { createSubscriptionPlan } from "@/app/paypal.actions";
 import { Spinner } from "./ui/spinner";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -51,6 +51,8 @@ const schema = z.object({
 
 const CreatePlan = (props: Props) => {
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -73,6 +75,7 @@ const CreatePlan = (props: Props) => {
     total_cycles,
   }: z.infer<typeof schema>) => {
     setLoading(true);
+    
     try {
       const response = await fetch("/api/paypal/plans", {
         body: JSON.stringify({
@@ -95,7 +98,9 @@ const CreatePlan = (props: Props) => {
         method: "POST",
       });
 
-      console.log(response);
+      setIsOpen(false);
+      router.refresh();
+      
     } catch (error) {
       console.error(error);
     } finally {
@@ -104,7 +109,8 @@ const CreatePlan = (props: Props) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen} >
+
       <DialogTrigger asChild>
         <Button>
           <PlusCircleIcon />

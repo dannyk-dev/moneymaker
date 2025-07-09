@@ -6,13 +6,12 @@ import {
   ISubscriptionRequest,
   ISubscriptionResponse,
 } from "@/utils/types";
-import { AxiosError } from "axios";
 
 export async function getSubscriptions() {
   const client = await getPayPalClient();
 
   const response = await client.get("/v1/billing/plans");
-  return response.data;
+  return response.data as ISubscriptionResponse;
 }
 
 export async function createSubscriptionPlan({
@@ -55,8 +54,6 @@ export async function createSubscriptionPlan({
     },
   };
 
-  console.log(subscriptionPayload);
-
   if (productStatus == 201) {
     try {
       const response = await client.post<ISubscriptionResponse>(
@@ -65,7 +62,6 @@ export async function createSubscriptionPlan({
       );
 
       if (response.status === 201) {
-        console.log(response.data);
         return true;
       }
     } catch (error) {

@@ -1,10 +1,13 @@
 import { getSubscriptions } from "@/app/paypal.actions";
 import CreatePlan from "@/components/create-plan";
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { cn } from "@/utils/styles";
+import { getPlanStatusLabel } from "@/utils/constants";
+import { upperFirst } from 'scule'
 
 export default async function Page() {
   const subscriptions = await getSubscriptions();
+  
 
   return (
     <div className="space-y-8">
@@ -18,30 +21,47 @@ export default async function Page() {
         <CreatePlan />
         {/* <Button>New Plan</Button> */}
       </div>
-      <div className="space-y-6">
-        <Card key={0}>
-          <h2 className="font-medium">Subscription 1</h2>
+      <div className="grid grid-cols-2 gap-4">
+        {subscriptions.plans.length > 0 ? subscriptions.plans.map((sub) => (
+          <Card key={sub.id}>
+          <h2 className="font-medium">{sub.name}</h2>
           <div className="grid gap-2 mt-2 text-sm">
             <div className="grid grid-cols-[150px_1fr]">
-              <div className="text-muted-foreground">Plan description</div>
-              <div>
-                This is an example subscription with a price of $100 per month
-              </div>
+              {sub?.description && (
+                <>
+                  <div className="text-muted-foreground">Plan description</div>
+                <div>
+                  {sub.description}
+                </div>
+                </>
+              )}
             </div>
             <div className="grid grid-cols-[150px_1fr]">
               <div className="text-muted-foreground">Price</div>
-              <div>$100 per month</div>
+              <div>
+                $ {sub.billing_cycles[0].pricing_scheme.fixed_price.value} per {sub.billing_cycles[0].frequency.interval_unit.toLowerCase()}
+              </div>
+            </div>
+            <div className="grid grid-cols-[150px_1fr]">
+              <div className="text-muted-foreground">Cycle</div>
+              <div>
+                Every {sub.billing_cycles[0].frequency.interval_count} {sub.billing_cycles[0].frequency.interval_unit.toLowerCase()} {sub.billing_cycles[0].frequency.interval_count > 1 ? 's' : ''}
+              </div>
             </div>
             <div className="grid grid-cols-[150px_1fr]">
               <div className="text-muted-foreground">Status</div>
               <div className="flex items-center gap-2">
-                <div className={cn("w-2 h-2 rounded-full bg-red-500")}></div>
-                Inactive
+                <Badge variant={getPlanStatusLabel(sub.status).variant}>
+                  {getPlanStatusLabel(sub.status).label}
+                </Badge>
               </div>
             </div>
           </div>
         </Card>
-        {JSON.stringify(subscriptions)}
+        )) : (
+          <p>No Plans yet...</p>
+        )}
+        {/* {JSON.stringify(subscriptions)} */}
       </div>
     </div>
   );

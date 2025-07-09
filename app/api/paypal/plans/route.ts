@@ -1,5 +1,6 @@
 import { createSubscriptionPlan } from "@/app/paypal.actions";
 import { ISubscriptionFormRequest } from "@/utils/types";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -9,7 +10,10 @@ export async function POST(req: NextRequest) {
     try {
         const result = await createSubscriptionPlan(payload);
 
+
         if (result) {
+            
+
             return NextResponse.json({
                 message: "Created successfullyl"
             }, {

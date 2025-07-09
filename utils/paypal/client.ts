@@ -49,7 +49,7 @@ export async function getPayPalClient() {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
-      Prefer: "return=minimal",
+      Prefer: "return=representation",
     },
   });
 }

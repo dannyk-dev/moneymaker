@@ -8,14 +8,10 @@ export interface IProductResponse extends IProductRequest {
   id: string;
 }
 
-export enum SubscriptionStatus {
-  CREATED = 'CREATED',
-  INACTIVE = 'INACTIVE',
-  ACTIVE = 'ACTIVE',
-}
 
 export type TIntervalUnit = "DAY" | "WEEK" | "MONTH" | "YEAR";
 export type TTenureType = "REGULAR" | "TRIAL";
+export type TSubscriptionStatus = 'CREATED' | 'ACTIVE' | 'INACTIVE';
 
 export const INTERVAL_UNITS: readonly {
   label: string;
@@ -58,7 +54,7 @@ export interface IBillingCycle {
 export interface ISubscriptionRequest {
   product_id: string;
   name: string;
-  status: 'CREATED' | 'ACTIVE' | 'INACTIVE';
+  status: TSubscriptionStatus;
   billing_cycles: IBillingCycle[];
   payment_preferences?: {
     setup_fee_failure_action: "CONTINUE" | "CANCEL";
@@ -89,6 +85,21 @@ export interface ISubscriptionFormRequest
 }
 
 export interface ISubscriptionResponse {
-  id: string;
-  status: SubscriptionStatus;
+  plans: {
+    id: string;
+    name: string;
+    description?: string;
+    product_id: string;
+    status: TSubscriptionStatus;
+    billing_cycles: IBillingCycle[];
+    create_time: string;
+    payment_preferences?: {
+      setup_fee_failure_action: "CONTINUE" | "CANCEL";
+      payment_failure_threshold: number;
+      setup_fee: {
+        currency_code: string;
+        value: string;
+      };
+    };
+  }[]
 }
