@@ -36,13 +36,14 @@ const PlanActions = ({ plan }: Props) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
-          <CircleEllipsis />
+          <CircleEllipsis className="w-5 h-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel className="w-full flex gap-x-2 items-center ">
           <Activity /> Manage Plan
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
         {isPlanActive ? (
           <DropdownMenuItem variant="destructive">
             <ShieldX /> Deactivate Plan
@@ -56,6 +57,7 @@ const PlanActions = ({ plan }: Props) => {
           <WalletCards />
           Update Plan
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuSub>
           <DropdownMenuSubTrigger className="text-sm flex items-center text-popover-foreground gap-x-2">
             <CreditCard className="w-4 h-4" />

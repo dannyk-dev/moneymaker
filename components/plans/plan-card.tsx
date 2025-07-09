@@ -19,7 +19,7 @@ const PlanCard = ({ plan }: Props) => {
     <Card>
       <div className="flex w-full items-start justify-between">
         <div>
-          <CardHeader>
+          <CardHeader className="p-0">
             <CardTitle>{plan.name}</CardTitle>
             {plan?.description && (
               <>
