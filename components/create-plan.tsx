@@ -40,7 +40,7 @@ import { useRouter } from "next/navigation";
 
 const schema = z.object({
   name: z.string().min(1),
-  status: z.enum(['CREATED', 'ACTIVE', 'INACTIVE']),
+  status: z.enum(["CREATED", "ACTIVE", "INACTIVE"]),
   interval_unit: z.enum(["DAY", "WEEK", "MONTH", "YEAR"]),
   interval_count: z.number().default(1),
   total_cycles: z.number().default(1),
@@ -56,7 +56,7 @@ const CreatePlan = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
-      status: 'ACTIVE',
+      status: "ACTIVE",
       interval_unit: "MONTH",
       interval_count: 1,
       total_cycles: 6,
@@ -73,7 +73,7 @@ const CreatePlan = () => {
     total_cycles,
   }: z.infer<typeof schema>) => {
     setLoading(true);
-    
+
     try {
       await fetch("/api/paypal/plans", {
         body: JSON.stringify({
@@ -98,7 +98,6 @@ const CreatePlan = () => {
 
       setIsOpen(false);
       router.refresh();
-      
     } catch (error) {
       console.error(error);
     } finally {
@@ -107,8 +106,7 @@ const CreatePlan = () => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen} >
-
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button>
           <PlusCircleIcon />
@@ -129,7 +127,7 @@ const CreatePlan = () => {
                 Create a subscription to make recurring purchases from
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-6 w-full">
+            <div className="space-y-6 w-full mt-4">
               <FormField
                 name="name"
                 control={form.control}
@@ -157,25 +155,19 @@ const CreatePlan = () => {
                       >
                         <FormItem className="flex items-center gap-3">
                           <FormControl>
-                            <RadioGroupItem
-                              value="ACTIVE"
-                            />
+                            <RadioGroupItem value="ACTIVE" />
                           </FormControl>
                           <FormLabel className="font-normal">Active</FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center gap-3">
                           <FormControl>
-                            <RadioGroupItem
-                              value="CREATED"
-                            />
+                            <RadioGroupItem value="CREATED" />
                           </FormControl>
                           <FormLabel className="font-normal">Idle</FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center gap-3">
                           <FormControl>
-                            <RadioGroupItem
-                              value="INACTIVE"
-                            />
+                            <RadioGroupItem value="INACTIVE" />
                           </FormControl>
                           <FormLabel className="font-normal">
                             Inactive
@@ -283,7 +275,7 @@ const CreatePlan = () => {
               />
             </div>
             <DialogFooter>
-              <Button className="w-full mt-4" type="submit">
+              <Button className="w-full mt-6" type="submit">
                 {loading ? <Spinner isLoading={loading} /> : "Save"}
               </Button>
             </DialogFooter>

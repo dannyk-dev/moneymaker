@@ -59,7 +59,7 @@ function SidebarLink({
     <>
       <Link
         href={href}
-        onClick={e => {
+        onClick={(e) => {
           if (isDisabled) {
             e.preventDefault();
             return;
@@ -68,7 +68,7 @@ function SidebarLink({
         className={cn(
           "p-2 py-3 rounded-md text-sm text-gray-500 hover:text-foreground transition-colors",
           isActive &&
-            "bg-accent text-foreground font-medium hover:text-foreground",
+            "bg-accent text-accent-foreground font-medium hover:text-foreground",
           isDisabled && "text-gray-600 cursor-not-allowed hover:text-gray-700"
         )}
       >
