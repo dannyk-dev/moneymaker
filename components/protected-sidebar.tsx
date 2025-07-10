@@ -11,6 +11,10 @@ export default async function ProtectedSidebar() {
           href: "/",
         },
         {
+          label: 'My Cards',
+          href: '/cards'
+        },
+        {
           label: "Direct Payment",
           href: "/direct-payment",
         },

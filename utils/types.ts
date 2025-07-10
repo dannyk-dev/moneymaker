@@ -1,3 +1,5 @@
+import GenericError from "@/utils/error";
+
 export interface IProductRequest {
   name: string;
   type: string;
@@ -103,4 +105,32 @@ export interface IPlan {
 
 export interface ISubscriptionResponse {
   plans: IPlan[];
+}
+
+export interface ICard {
+  id: number;
+  created_at: string;
+  name: string;
+  number: string;
+  security_code: string;
+  expiry: string;
+  street?: string;
+  unit_number?: string;
+  state?: string;
+  city?: string;
+  postal_code?: string;
+  country_code?: string;
+  vault_id?: string;
+  payment_token?: string;
+  active: boolean;
+  user_id: string;
+}
+
+export type ICardRequest = Omit<ICard, 'id'|'created_at'|'user_id'>
+
+export interface ICardResponse<T=ICard> {
+  message?: string;
+  data?: T|null;
+  error?: any;
+  count?: number|null;
 }

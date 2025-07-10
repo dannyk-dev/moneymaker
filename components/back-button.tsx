@@ -15,7 +15,7 @@ const BackButton = () => {
   return (
     <Button
       variant="secondary"
-      className="w-fit"
+      className="w-fit mb-4"
       size="lg"
       onClick={handleBackNavigation}
     >

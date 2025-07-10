@@ -15,3 +15,17 @@ export function normalizePrice(
 ) {
   return `$ ${priceValue} per ${intervalUnit.toLowerCase()}`;
 }
+
+export function extractMonthYearFromCardExpiry(expiry: string) {
+  const [year, month] = expiry.split('-')
+
+
+  return {
+    year,
+    month
+  }
+}
+
+export function convertMonthYearToCardExpiry(month: string, year: string) {
+  return `${year}-${month}`
+}
