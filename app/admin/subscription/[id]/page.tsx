@@ -4,12 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { normalizePrice } from "@/utils/helpers";
 import React from "react";
 
-type Props = {
+interface PageProps {
   params: { id: string };
-};
+}
 
-const SubscriptionListPage = async ({ params }: Props) => {
-  const currentPage = await getPlanDetails(params.id);
+const SubscriptionListPage = async ({ params }: PageProps) => {
+  const { id } = params;
+  const currentPage = await getPlanDetails(id);
 
   return (
     <div className="flex flex-col space-y-8">
