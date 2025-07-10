@@ -25,12 +25,10 @@ const PlansFilter = ({ plans, setFilteredPlans }: Props) => {
   const [statusType, setStatusType] =
     useState<TSubscriptionStatusFilter>("ACTIVE");
 
-  console.log(plans);
   useEffect(() => {
     if (statusType === "ALL") {
       setFilteredPlans(plans);
     } else {
-      console.log(plans.filter((item) => item.status === statusType));
       setFilteredPlans(plans.filter((item) => item.status === statusType));
     }
   }, [statusType, setFilteredPlans, plans]);

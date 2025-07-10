@@ -1,6 +1,7 @@
 import GenericError from "@/utils/error";
 import { getPayPalClient } from "@/utils/paypal/client";
 import {
+  IPlan,
   IProductRequest,
   IProductResponse,
   ISubscriptionFormRequest,
@@ -14,6 +15,13 @@ export async function getSubscriptions() {
 
   const response = await client.get("/v1/billing/plans");
   return response.data as ISubscriptionResponse;
+}
+
+export async function getPlanDetails(id: string): Promise<IPlan> {
+  const client = await getPayPalClient();
+
+  const response = await client.get(`/v1/billing/plans/${id}`);
+  return response.data as IPlan;
 }
 
 export async function createSubscriptionPlan({

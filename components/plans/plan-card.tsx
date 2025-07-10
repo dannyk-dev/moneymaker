@@ -10,6 +10,7 @@ import {
 import { getPlanStatusLabel } from "@/utils/constants";
 import { Badge } from "@/components/ui/badge";
 import PlanActions from "@/components/plans/actions";
+import { normalizeInterval, normalizePrice } from "@/utils/helpers";
 
 type Props = {
   plan: IPlan;
@@ -36,16 +37,19 @@ const PlanCard = ({ plan }: Props) => {
         <div className="grid grid-cols-[150px_1fr] ">
           <div className="text-muted-foreground">Price</div>
           <div className="ml-auto">
-            $ {plan.billing_cycles[0].pricing_scheme.fixed_price.value} per{" "}
-            {plan.billing_cycles[0].frequency.interval_unit.toLowerCase()}
+            {normalizePrice(
+              plan.billing_cycles[0].pricing_scheme.fixed_price.value,
+              plan.billing_cycles[0].frequency.interval_unit
+            )}
           </div>
         </div>
         <div className="grid grid-cols-[150px_1fr]">
           <div className="text-muted-foreground">Cycle</div>
           <div className="ml-auto">
-            Every {plan.billing_cycles[0].frequency.interval_count}{" "}
-            {plan.billing_cycles[0].frequency.interval_unit.toLowerCase()}{" "}
-            {plan.billing_cycles[0].frequency.interval_count > 1 ? "s" : ""}
+            {normalizeInterval(
+              plan.billing_cycles[0].frequency.interval_count,
+              plan.billing_cycles[0].frequency.interval_unit
+            )}
           </div>
         </div>
         <div className="grid grid-cols-[150px_1fr]">
