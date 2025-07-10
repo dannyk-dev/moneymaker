@@ -8,6 +8,7 @@ import GenericError from '@/utils/error';
 import { convertMonthYearToCardExpiry, extractMonthYearFromCardExpiry } from '@/utils/helpers';
 import { ICard, ICardRequest, ICardResponse } from '@/utils/types'
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import React, { useMemo } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -34,6 +35,7 @@ const schema = z.object({
 type TSchema = z.infer<typeof schema>
 
 function CardForm({ defaultCard }: Props) {
+  const router = useRouter();
   const defaultValues = useMemo(() => {
     if (defaultCard) {
       const { month, year } = extractMonthYearFromCardExpiry(defaultCard.expiry);
@@ -71,6 +73,7 @@ function CardForm({ defaultCard }: Props) {
         const data: ICardResponse = await response.json();
 
         toast(data.message)
+        router.refresh()
       }
 
     } catch (error: any) {

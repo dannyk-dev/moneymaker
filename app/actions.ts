@@ -68,6 +68,7 @@ export const saveCard = async (payload: ICardRequest): Promise<boolean> => {
 
 export const getCards = async () => {
   const client = await createSupabaseClient();
+  const { data: userData } = await client.auth.getUser();
 
-  return await client.from('cards').select('*');
+  return await client.from('cards').select('*').eq('user_id', userData.user!.id);
 }
