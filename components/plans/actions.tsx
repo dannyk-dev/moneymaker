@@ -3,12 +3,10 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { IPlan } from "@/utils/types";
@@ -74,41 +72,41 @@ const PlanActions = ({ plan }: Props) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
-        <DropdownMenuLabel className="w-full flex gap-x-2 items-center ">
-          <Activity /> Manage Plan
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {isPlanActive ? (
-          <DropdownMenuItem
-            variant="destructive"
-            onClick={() => handleActivation(isPlanActive)}
-          >
-            <ShieldX /> Deactivate Plan
-          </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem onClick={() => handleActivation(isPlanActive)}>
-            <ShieldCheck /> Activate Plan
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuItem>
-          <WalletCards />
-          Update Plan
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger className="text-sm flex items-center text-popover-foreground gap-x-2">
-            <CreditCard className="w-4 h-4" />
-            Subscriptions
-          </DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            <DropdownMenuItem asChild>
-              <Link href={`/admin/subscription/${plan.id}`}>
-                <BookUser />
-                View Subscriptions
-              </Link>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="w-full flex gap-x-2 items-center ">
+            <Activity className="w-4 h-4" /> Manage Plan
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {isPlanActive ? (
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => handleActivation(isPlanActive)}
+            >
+              <ShieldX /> Deactivate Plan
             </DropdownMenuItem>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
+          ) : (
+            <DropdownMenuItem onClick={() => handleActivation(isPlanActive)}>
+              <ShieldCheck /> Activate Plan
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem>
+            <WalletCards />
+            Update Plan
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link href={`/admin/subscription/${plan.id}`}>
+              <BookUser />
+              View Subscriptions
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <CreditCard className="w-4 h-4" />
+            New Card
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
