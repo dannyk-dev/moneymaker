@@ -4,11 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { normalizePrice } from "@/utils/helpers";
 import React from "react";
 
-interface PageProps {
-  params: { id: string };
-}
-
-const SubscriptionListPage = async ({ params }: PageProps) => {
+const SubscriptionListPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const currentPage = await getPlanDetails(id);
 
