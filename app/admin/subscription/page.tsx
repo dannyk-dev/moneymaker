@@ -22,7 +22,6 @@ export default async function Page() {
         ) : (
           <p className="text-center w-full col-span-2">No Plans yet...</p>
         )}
-        {/* {JSON.stringify(subscriptions)} */}
       </div>
     </div>
   );
