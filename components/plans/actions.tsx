@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -21,8 +22,10 @@ import {
   WalletCards,
 } from "lucide-react";
 import Link from "next/link";
-import React, { useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import React, { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { Spinner } from "../ui/spinner";
 
 type Props = {
   plan: IPlan;
@@ -30,20 +33,44 @@ type Props = {
 
 const PlanActions = ({ plan }: Props) => {
   const isPlanActive = useMemo(() => plan.status === "ACTIVE", [plan]);
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
-  // const handleActivation = useCallback(async () => {
-  //   const response = await fetch(`/api/paypal/plans/${isPlanActive ? 'deactivate' : 'activate'}`);
+  const handleActivation = useCallback(
+    async (activeState: boolean) => {
+      setIsLoading(true);
 
-  //   if (response.ok) {
-  //     toast(response)
-  //   }
-  // }, [isPlanActive]);
+      try {
+        const response = await fetch(
+          `/api/paypal/plans/${activeState ? "deactivate" : "activate"}`,
+          {
+            body: JSON.stringify({
+              planId: plan.id,
+            }),
+            method: "POST",
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+
+          toast(data.message);
+          router.refresh();
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isPlanActive]
+  );
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
-          <CircleEllipsis className="w-5 h-5" />
+          {isLoading ? <Spinner /> : <CircleEllipsis className="w-5 h-5" />}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
@@ -52,11 +79,14 @@ const PlanActions = ({ plan }: Props) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {isPlanActive ? (
-          <DropdownMenuItem variant="destructive">
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => handleActivation(isPlanActive)}
+          >
             <ShieldX /> Deactivate Plan
           </DropdownMenuItem>
         ) : (
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleActivation(isPlanActive)}>
             <ShieldCheck /> Activate Plan
           </DropdownMenuItem>
         )}
