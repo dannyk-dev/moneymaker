@@ -14,7 +14,7 @@ export default async function SignIn(props: {
       className="flex-1 flex flex-col w-full max-w-sm mx-auto mt-24"
       action={signInAction}
     >
-      <h1 className="text-2xl font-medium">Sign in</h1>
+      <h1 className="text-2xl font-medium">Log-in</h1>
       <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
         <Label htmlFor="email">Email</Label>
         <Input name="email" placeholder="you@example.com" required />

@@ -1,8 +1,9 @@
 import { getSubscriptions } from "@/app/paypal.actions";
 import CreatePlan from "@/components/create-plan";
-import PlanCard from "@/components/plans/plan-card";
+import PlanList from "@/components/plans/plan-list";
+
 export default async function Page() {
-  const subscriptions = await getSubscriptions();
+  const plans = await getSubscriptions();
 
   return (
     <div className="space-y-8">
@@ -14,15 +15,8 @@ export default async function Page() {
           </p>
         </div>
         <CreatePlan />
-        {/* <Button>New Plan</Button> */}
       </div>
-      <div className="grid grid-cols-2 gap-4 pb-4">
-        {subscriptions.plans.length > 0 ? (
-          subscriptions.plans.map((sub) => <PlanCard key={sub.id} plan={sub} />)
-        ) : (
-          <p className="text-center w-full col-span-2">No Plans yet...</p>
-        )}
-      </div>
+      <PlanList plans={plans} />
     </div>
   );
 }

@@ -63,7 +63,7 @@ const PlanActions = ({ plan }: Props) => {
         setIsLoading(false);
       }
     },
-    [isPlanActive]
+    [plan.id, router]
   );
 
   return (
