@@ -3,7 +3,7 @@
 import { createSupabaseClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { encodedRedirect } from "@/utils/redirect";
-import { ICard, ICardRequest, ICardResponse } from "@/utils/types";
+import {  ICardRequest } from "@/utils/types";
 import GenericError from "@/utils/error";
 
 export const signInAction = async (formData: FormData) => {
