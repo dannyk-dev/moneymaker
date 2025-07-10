@@ -47,7 +47,19 @@ function CardForm({ defaultCard }: Props) {
       } satisfies TSchema
     }
 
-    return {}
+    return {
+      name:          '',
+    number:        '',
+    security_code: '',
+    expiry_month:  '',
+    expiry_year:   '',
+    street:        '',
+    unit_number:   '',
+    state:         '',
+    city:          '',
+    postal_code:   '',
+    country_code:  '',
+    } satisfies TSchema
   }, [defaultCard])
 
   const form = useForm<TSchema>({

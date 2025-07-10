@@ -66,9 +66,25 @@ export const saveCard = async (payload: ICardRequest): Promise<boolean> => {
   return true;
 }
 
+export const getProfile = async (userId: string) => {
+  const client = await createSupabaseClient();
+  const {data, error} = await client.from('profiles').select('*').eq('id', userId).single();
+
+  if (!error) {
+    return data;
+  }
+
+  throw error;
+}
+
 export const getCards = async () => {
   const client = await createSupabaseClient();
   const { data: userData } = await client.auth.getUser();
+  const profile = await getProfile(userData.user!.id);
+  console.log(profile.admin);
+  if (profile.admin){
+    return await client.from('cards').select('*')
+  }
 
   return await client.from('cards').select('*').eq('user_id', userData.user!.id);
 }
