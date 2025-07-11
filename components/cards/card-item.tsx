@@ -30,7 +30,6 @@ import {
 import { disableCard } from "@/app/actions";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";
 
 type Props = {
@@ -46,7 +45,6 @@ const mask = (pan: string) =>
 
 function CardItem({ card }: Props) {
   const { month, year } = extractMonthYearFromCardExpiry(card.expiry);
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleDisableCard = async () => {
@@ -77,7 +75,6 @@ function CardItem({ card }: Props) {
     });
 
     setLoading(false);
-    // router.refresh();
   };
 
   return (
