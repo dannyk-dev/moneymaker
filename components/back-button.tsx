@@ -1,11 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const BackButton = () => {
+const BackButton = ({className, ...props}: React.ComponentProps<'button'>) => {
   const router = useRouter();
 
   const handleBackNavigation = () => {
@@ -15,9 +16,10 @@ const BackButton = () => {
   return (
     <Button
       variant="secondary"
-      className="w-fit mb-4"
       size="lg"
       onClick={handleBackNavigation}
+      {...props}
+      className={cn("w-fit mb-4", className)}
     >
       <ChevronLeft />
       Back
