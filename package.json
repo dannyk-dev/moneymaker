@@ -22,6 +22,7 @@
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.4",
     "@tailwindcss/postcss": "^4.0.13",
+    "@uidotdev/usehooks": "^2.4.1",
     "@updatedev/js": "^0.4.1",
     "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",

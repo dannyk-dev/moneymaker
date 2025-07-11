@@ -31,6 +31,7 @@ import { disableCard } from "@/app/actions";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
+import { useRouter } from "next/navigation";
 
 type Props = {
   card: ICard;
@@ -46,6 +47,7 @@ const mask = (pan: string) =>
 function CardItem({ card }: Props) {
   const { month, year } = extractMonthYearFromCardExpiry(card.expiry);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleDisableCard = async () => {
     setLoading(true);
@@ -74,6 +76,7 @@ function CardItem({ card }: Props) {
       icon: <ShieldX />,
     });
 
+    router.refresh();
     setLoading(false);
   };
 
@@ -81,10 +84,8 @@ function CardItem({ card }: Props) {
     <ContextMenu>
       <ContextMenuTrigger disabled={loading}>
         {loading ? (
-          // <div className="">
           <Skeleton className="p-6 shadow-lg rounded-3xl w-full" />
         ) : (
-          // </div>
           <Card
             className={cn(
               "relative overflow-hidden rounded-3xl p-6 shadow-lg transition-all duration-300 ease-in-out hover:scale-105 ",

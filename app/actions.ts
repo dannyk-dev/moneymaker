@@ -47,6 +47,33 @@ export const signOutAction = async () => {
   return redirect("/sign-in");
 };
 
+export const checkCardExists = async (cardNumber: string) => {
+  const client = await createSupabaseClient();
+
+  const { data, error } = await client.from('cards').select('*').eq('number', cardNumber).maybeSingle();
+
+  if (error) {
+    return {
+      exists: false,
+      active: false,
+      id: null
+    };
+  }
+
+  if (!data) return {
+    exists: false,
+    active: false,
+    id: null
+  }
+  console.log(data.id);
+
+  return {
+    exists: true,
+    active: data.active,
+    id: data.id
+  };
+}
+
 export const saveCard = async (payload: ICardRequest): Promise<boolean> => {
   const client = await createSupabaseClient();
   const { data: userData } = await client.auth.getUser();
