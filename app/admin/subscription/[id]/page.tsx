@@ -1,13 +1,15 @@
 import { getPlanDetails } from "@/app/paypal.actions";
 import BackButton from "@/components/back-button";
 import { Badge } from "@/components/ui/badge";
+import { INTERVAL_UNIT_MAP } from "@/utils/constants";
 import { normalizePrice } from "@/utils/helpers";
+import { TIntervalUnit } from "@/utils/types";
 import React from "react";
 
 interface Props {
   params: Promise<{
     id: string;
-  }>
+  }>;
 }
 
 const SubscriptionListPage = async ({ params }: Props) => {
@@ -27,7 +29,10 @@ const SubscriptionListPage = async ({ params }: Props) => {
                 {normalizePrice(
                   currentPage.billing_cycles[0].pricing_scheme.fixed_price
                     .value,
-                  currentPage.billing_cycles[0].frequency.interval_unit
+                  INTERVAL_UNIT_MAP[
+                    currentPage.billing_cycles[0].frequency
+                      .interval_unit as TIntervalUnit
+                  ]
                 )}
               </Badge>
             </div>
