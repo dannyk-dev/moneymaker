@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { useFilters } from "@/hooks/use-filters";
+import { CARD_TYPE_MAP } from "@/utils/constants";
 import GenericError from "@/utils/error";
 import {
   convertMonthYearToCardExpiry,
@@ -34,6 +36,13 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 type Props = {
   defaultCard?: ICard;
@@ -51,6 +60,7 @@ const schema = z.object({
   city: z.string().optional(),
   postal_code: z.string().optional(),
   country_code: z.string().min(2).max(2).optional(),
+  card_type: z.number(),
 });
 
 type TSchema = z.infer<typeof schema>;
@@ -67,6 +77,7 @@ function CardForm({ defaultCard }: Props) {
     id: null,
   });
   const [activating, setActivating] = useState(false);
+  const cardTypes = useFilters(CARD_TYPE_MAP);
 
   const defaultValues = useMemo(() => {
     if (defaultCard) {
@@ -93,6 +104,7 @@ function CardForm({ defaultCard }: Props) {
       city: "",
       postal_code: "",
       country_code: "",
+      card_type: CARD_TYPE_MAP.PREPAID,
     } satisfies TSchema;
   }, [defaultCard]);
 
@@ -108,6 +120,8 @@ function CardForm({ defaultCard }: Props) {
     const { expiry_month, expiry_year, ...payload } = values;
     const body: ICardRequest = {
       ...payload,
+      card_type: payload.card_type,
+      is_used: false,
       expiry: convertMonthYearToCardExpiry(expiry_month, expiry_year),
       active: true,
     };
@@ -148,14 +162,14 @@ function CardForm({ defaultCard }: Props) {
   }, [debouncedNumber]);
 
   const resetCardExistsDialog = () => {
-    form.setValue('number', '');
+    form.setValue("number", "");
     setCardExists({
       active: false,
       exists: false,
-      id: null
-    })
+      id: null,
+    });
     setActivating(false);
-  }
+  };
 
   const handleCardExistsDecision = async () => {
     if (cardExists.exists && cardExists.id) {
@@ -174,9 +188,8 @@ function CardForm({ defaultCard }: Props) {
           return toast("failed to enable card ");
         }
 
-        toast('Activated card')
+        toast("Activated card");
         resetCardExistsDialog();
-
       }
 
       router.push(`/admin/cards?id=${cardExists.id}`);
@@ -188,27 +201,32 @@ function CardForm({ defaultCard }: Props) {
       <Dialog open={cardExists.exists} onOpenChange={resetCardExistsDialog}>
         <DialogContent>
           <DialogHeader>
-          <DialogTitle>This card already exists</DialogTitle>
-          <DialogDescription>
-            {cardExists.active
-              ? "Would you like to go view this card?"
-              : "This card is already active. Activate it now?"}
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="mt-6">
-            <Button className="w-1/2" variant='ghost' onClick={resetCardExistsDialog}>
+            <DialogTitle>This card already exists</DialogTitle>
+            <DialogDescription>
+              {cardExists.active
+                ? "Would you like to go view this card?"
+                : "This card is already active. Activate it now?"}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-6">
+            <Button
+              className="w-1/2"
+              variant="ghost"
+              onClick={resetCardExistsDialog}
+            >
               Cancel
             </Button>
-          <Button
-            className="w-1/2"
-            variant={cardExists.active ? "default" : "destructive"}
-            onClick={handleCardExistsDecision}
-            loading={activating}
-            loadingText="Activating..."
-          >
-            {cardExists.active ? "View card" : "Yes, activate now"}
-          </Button>
-        </DialogFooter></DialogContent>
+            <Button
+              className="w-1/2"
+              variant={cardExists.active ? "default" : "destructive"}
+              onClick={handleCardExistsDecision}
+              loading={activating}
+              loadingText="Activating..."
+            >
+              {cardExists.active ? "View card" : "Yes, activate now"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
       </Dialog>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
@@ -246,7 +264,33 @@ function CardForm({ defaultCard }: Props) {
           />
 
           {/* ------------------------------------------------ Security code ---- */}
-          <div className="grid grid-cols-3 gap-x-4">
+          <div className="grid grid-cols-4 gap-x-4">
+            <FormField
+              name="card_type"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Card Type</FormLabel>
+                  <Select
+                    onValueChange={(val) => field.onChange(+val)}
+                    defaultValue={field.value.toString()}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {cardTypes.map(({ label, value }) => (
+                        <SelectItem key={value} value={value.toString()}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
             <FormField
               name="security_code"
               control={form.control}

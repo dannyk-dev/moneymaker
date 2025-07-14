@@ -11,12 +11,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IPlan, TSubscriptionStatus } from "@/utils/types";
+import { SUBSCRIPTION_STATUS_MAP } from "@/utils/constants";
+import { ReverseMapping } from "@/utils/helpers";
+import { TSubscriptionStatus, TSupabasePlan } from "@/utils/types";
 import React, { useEffect, useState } from "react";
 
 type Props = {
-  plans: IPlan[];
-  setFilteredPlans: React.Dispatch<React.SetStateAction<IPlan[]>>;
+  plans: TSupabasePlan[];
+  setFilteredPlans: React.Dispatch<React.SetStateAction<TSupabasePlan[]>>;
 };
 
 type TSubscriptionStatusFilter = TSubscriptionStatus | "ALL";
@@ -29,7 +31,12 @@ const PlansFilter = ({ plans, setFilteredPlans }: Props) => {
     if (statusType === "ALL") {
       setFilteredPlans(plans);
     } else {
-      setFilteredPlans(plans.filter((item) => item.status === statusType));
+      setFilteredPlans(
+        plans.filter(
+          (item) =>
+            ReverseMapping(SUBSCRIPTION_STATUS_MAP)[item.status] === statusType
+        )
+      );
     }
   }, [statusType, setFilteredPlans, plans]);
 

@@ -17,11 +17,13 @@ export type Database = {
       cards: {
         Row: {
           active: boolean
+          card_type: number
           city: string | null
           country_code: string
           created_at: string
           expiry: string
           id: number
+          is_used: boolean
           name: string
           number: string
           payment_token: string | null
@@ -36,11 +38,13 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          card_type?: number
           city?: string | null
           country_code: string
           created_at?: string
           expiry: string
           id?: number
+          is_used?: boolean
           name: string
           number: string
           payment_token?: string | null
@@ -55,11 +59,13 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          card_type?: number
           city?: string | null
           country_code?: string
           created_at?: string
           expiry?: string
           id?: number
+          is_used?: boolean
           name?: string
           number?: string
           payment_token?: string | null
@@ -71,6 +77,60 @@ export type Database = {
           unit_number?: string | null
           user_id?: string
           vault_id?: string | null
+        }
+        Relationships: []
+      }
+      plans: {
+        Row: {
+          created_at: string
+          currency_code: string
+          description: string | null
+          fixed_price: number
+          id: number
+          interval_count: number
+          interval_unit: number
+          name: string
+          paypal_plan_id: string
+          paypal_produt_id: string
+          sequence: number
+          status: number
+          tenure_type: number
+          total_cycles: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency_code?: string
+          description?: string | null
+          fixed_price: number
+          id?: number
+          interval_count?: number
+          interval_unit?: number
+          name: string
+          paypal_plan_id: string
+          paypal_produt_id: string
+          sequence?: number
+          status?: number
+          tenure_type?: number
+          total_cycles?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency_code?: string
+          description?: string | null
+          fixed_price?: number
+          id?: number
+          interval_count?: number
+          interval_unit?: number
+          name?: string
+          paypal_plan_id?: string
+          paypal_produt_id?: string
+          sequence?: number
+          status?: number
+          tenure_type?: number
+          total_cycles?: number
+          user_id?: string
         }
         Relationships: []
       }

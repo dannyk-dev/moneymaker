@@ -1,5 +1,5 @@
 import React from "react";
-import { IPlan } from "../../utils/types";
+import { TSupabasePlan } from "../../utils/types";
 import {
   Card,
   CardContent,
@@ -13,7 +13,7 @@ import PlanActions from "@/components/plans/actions";
 import { normalizeInterval, normalizePrice } from "@/utils/helpers";
 
 type Props = {
-  plan: IPlan;
+  plan: TSupabasePlan;
 };
 
 const PlanCard = ({ plan }: Props) => {
@@ -37,19 +37,13 @@ const PlanCard = ({ plan }: Props) => {
         <div className="grid grid-cols-[150px_1fr] ">
           <div className="text-muted-foreground">Price</div>
           <div className="ml-auto">
-            {normalizePrice(
-              plan.billing_cycles[0].pricing_scheme.fixed_price.value,
-              plan.billing_cycles[0].frequency.interval_unit
-            )}
+            {normalizePrice(plan.fixed_price.toString(), plan.interval_unit)}
           </div>
         </div>
         <div className="grid grid-cols-[150px_1fr]">
           <div className="text-muted-foreground">Cycle</div>
           <div className="ml-auto">
-            {normalizeInterval(
-              plan.billing_cycles[0].frequency.interval_count,
-              plan.billing_cycles[0].frequency.interval_unit
-            )}
+            {normalizeInterval(plan.interval_count, plan.interval_unit)}
           </div>
         </div>
         <div className="grid grid-cols-[150px_1fr]">

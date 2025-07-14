@@ -1,11 +1,17 @@
 import { getCards } from "@/app/actions";
-import CardItem from "@/components/cards/card-item";
+import CardsList from "@/components/cards/cards-list";
 import Container from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { ICard } from "@/utils/types";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+
+type Props = {
+  searchParams: Promise<{
+    tab?: "inactive" | "used" | "unused";
+  }>;
+};
 
 async function CardsPage() {
   const { data, error } = await getCards();
@@ -27,18 +33,7 @@ async function CardsPage() {
         </Button>
       }
     >
-      <div className="flex flex-col w-full mt-10 space-y-3">
-        <div className="flex items-center w-full justify-between">
-          <div className="">filters here</div>
-          <p className="mt-auto text-muted-foreground">
-            Found {data.length} results
-          </p>
-        </div>
-        <div className="flex flex-col w-full gap-y-4 ">
-          {data.length > 0 &&
-            data.map((item) => <CardItem key={item.id} card={item as ICard} />)}
-        </div>
-      </div>
+      <CardsList cards={data as ICard[]} />
     </Container>
   );
 }

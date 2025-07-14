@@ -1,6 +1,5 @@
 "use client";
 
-import { INTERVAL_UNITS } from "@/utils/types";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -37,11 +36,13 @@ import {
 import InputNumber from "./ui/input-number";
 import { Spinner } from "./ui/spinner";
 import { useRouter } from "next/navigation";
+import { useFilters } from "@/hooks/use-filters";
+import { INTERVAL_UNIT_MAP, SUBSCRIPTION_STATUS_MAP } from "@/utils/constants";
 
 const schema = z.object({
   name: z.string().min(1),
-  status: z.enum(["CREATED", "ACTIVE", "INACTIVE"]),
-  interval_unit: z.enum(["DAY", "WEEK", "MONTH", "YEAR"]),
+  status: z.string(),
+  interval_unit: z.number(),
   interval_count: z.number().default(1),
   total_cycles: z.number().default(1),
   price: z.number().min(1),
@@ -51,13 +52,15 @@ const CreatePlan = () => {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const planStatusMap = useFilters(SUBSCRIPTION_STATUS_MAP);
+  const intervalUnitMap = useFilters(INTERVAL_UNIT_MAP);
 
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       status: "ACTIVE",
-      interval_unit: "MONTH",
+      interval_unit: INTERVAL_UNIT_MAP.MONTH,
       interval_count: 1,
       total_cycles: 6,
       price: 10,
@@ -153,26 +156,17 @@ const CreatePlan = () => {
                         defaultValue={field.value}
                         className="flex gap-x-4 items-baseline"
                       >
-                        <FormItem className="flex items-center gap-3">
-                          <FormControl>
-                            <RadioGroupItem value="ACTIVE" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Active</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center gap-3">
-                          <FormControl>
-                            <RadioGroupItem value="CREATED" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Idle</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center gap-3">
-                          <FormControl>
-                            <RadioGroupItem value="INACTIVE" />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            Inactive
-                          </FormLabel>
-                        </FormItem>
+                        {planStatusMap.map(({ label, value }) => (
+                          <FormItem
+                            key={value}
+                            className="flex items-center gap-3"
+                          >
+                            <FormControl>
+                              <RadioGroupItem value={label} />
+                            </FormControl>
+                            <FormLabel>{label}</FormLabel>
+                          </FormItem>
+                        ))}
                       </RadioGroup>
                     </FormControl>
                     <FormMessage />
@@ -186,8 +180,8 @@ const CreatePlan = () => {
                   <FormItem>
                     <FormLabel>Recurrence</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      onValueChange={(val) => field.onChange(+val)}
+                      defaultValue={field.value.toString()}
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
@@ -195,8 +189,8 @@ const CreatePlan = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {INTERVAL_UNITS.map(({ label, value }) => (
-                          <SelectItem key={value} value={value}>
+                        {intervalUnitMap.map(({ label, value }) => (
+                          <SelectItem key={value} value={value.toString()}>
                             {label}
                           </SelectItem>
                         ))}

@@ -1,5 +1,4 @@
-import GenericError from "@/utils/error";
-
+import { Database } from "@/database.types";
 export interface IProductRequest {
   name: string;
   type: string;
@@ -13,6 +12,7 @@ export interface IProductResponse extends IProductRequest {
 export type TIntervalUnit = "DAY" | "WEEK" | "MONTH" | "YEAR";
 export type TTenureType = "REGULAR" | "TRIAL";
 export type TSubscriptionStatus = "CREATED" | "ACTIVE" | "INACTIVE";
+export type TCardType = "CREDIT" | "DEBIT" | "PREPAID";
 
 export const INTERVAL_UNITS: readonly {
   label: string;
@@ -38,7 +38,7 @@ export const INTERVAL_UNITS: readonly {
 
 export interface IBillingCycle {
   frequency: {
-    interval_unit: TIntervalUnit;
+    interval_unit: string;
     interval_count: number;
   };
   sequence: number;
@@ -52,11 +52,18 @@ export interface IBillingCycle {
   };
 }
 
+export interface IBillingCycleRequest extends Omit<IBillingCycle, "frequency"> {
+  frequency: {
+    interval_unit: TIntervalUnit;
+    interval_count: number;
+  };
+}
+
 export interface ISubscriptionRequest {
   product_id: string;
   name: string;
   status: TSubscriptionStatus;
-  billing_cycles: IBillingCycle[];
+  billing_cycles: IBillingCycleRequest[];
   payment_preferences?: {
     setup_fee_failure_action: "CONTINUE" | "CANCEL";
     payment_failure_threshold: number;
@@ -71,7 +78,7 @@ export interface ISubscriptionFormRequest
   extends Pick<ISubscriptionRequest, "name" | "status"> {
   billing_cycle: {
     frequency: {
-      interval_unit: TIntervalUnit;
+      interval_unit: number;
       interval_count: number;
     };
 
@@ -103,6 +110,8 @@ export interface IPlan {
   };
 }
 
+export type TSupabasePlan = Database["public"]["Tables"]["plans"]["Row"];
+
 export interface ISubscriptionResponse {
   plans: IPlan[];
 }
@@ -124,13 +133,15 @@ export interface ICard {
   payment_token?: string;
   active: boolean;
   user_id: string;
+  is_used: boolean;
+  card_type: number;
 }
 
-export type ICardRequest = Omit<ICard, 'id'|'created_at'|'user_id'>
+export type ICardRequest = Omit<ICard, "id" | "created_at" | "user_id">;
 
-export interface ICardResponse<T=ICard> {
+export interface ICardResponse<T = ICard> {
   message?: string;
-  data?: T|null;
+  data?: T | null;
   error?: any;
-  count?: number|null;
+  count?: number | null;
 }

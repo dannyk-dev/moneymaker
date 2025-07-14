@@ -1,4 +1,6 @@
+import { INTERVAL_UNIT_MAP } from "@/utils/constants";
 import GenericError from "@/utils/error";
+import { ReverseMapping } from "@/utils/helpers";
 import { getPayPalClient } from "@/utils/paypal/client";
 import {
   IPlan,
@@ -50,6 +52,13 @@ export async function createSubscriptionPlan({
     billing_cycles: [
       {
         ...billing_cycle,
+        frequency: {
+          ...billing_cycle.frequency,
+          interval_unit:
+            ReverseMapping(INTERVAL_UNIT_MAP)[
+              billing_cycle.frequency.interval_unit
+            ],
+        },
         sequence: 1,
         tenure_type: "REGULAR",
       },
@@ -66,12 +75,13 @@ export async function createSubscriptionPlan({
 
   if (productStatus == 201) {
     try {
-      const response = await client.post<ISubscriptionResponse>(
+      const response = await client.post<IPlan>(
         "/v1/billing/plans",
         subscriptionPayload
       );
 
       if (response.status === 201) {
+        revalidatePath("/admin/subscriptions");
         return true;
       }
     } catch (error) {
@@ -104,4 +114,43 @@ export async function planActivator(planId: string, activate: boolean = true) {
 
     throw new GenericError();
   }
+}
+
+export async function verifyPayPalWebhookSignature(
+  headers: Headers,
+  rawBody: string
+): Promise<"SUCCESS" | "FAILURE"> {
+  const paypalAuth = Buffer.from(
+    `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
+  ).toString("base64");
+
+  const transmissionId = headers.get("paypal-transmission-id")!;
+  const transmissionTime = headers.get("paypal-transmission-time")!;
+  const certUrl = headers.get("paypal-cert-url")!;
+  const authAlgo = headers.get("paypal-auth-algo")!;
+  const transmissionSig = headers.get("paypal-transmission-sig")!;
+  const webhookId = process.env.PAYPAL_WEBHOOK_ID!; // You get this from PayPal when creating the webhook
+
+  const res = await fetch(
+    `${process.env.PAYPAL_BASE_URL}/v1/notifications/verify-webhook-signature`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${paypalAuth}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        auth_algo: authAlgo,
+        cert_url: certUrl,
+        transmission_id: transmissionId,
+        transmission_sig: transmissionSig,
+        transmission_time: transmissionTime,
+        webhook_id: webhookId,
+        webhook_event: JSON.parse(rawBody),
+      }),
+    }
+  );
+
+  const data = await res.json();
+  return data.verification_status;
 }

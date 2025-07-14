@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { IPlan } from "@/utils/types";
+import { IPlan, TSupabasePlan } from "@/utils/types";
 import {
   Activity,
   BookUser,
@@ -24,13 +24,18 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Spinner } from "../ui/spinner";
+import { ReverseMapping } from "@/utils/helpers";
+import { SUBSCRIPTION_STATUS_MAP } from "@/utils/constants";
 
 type Props = {
-  plan: IPlan;
+  plan: TSupabasePlan;
 };
 
 const PlanActions = ({ plan }: Props) => {
-  const isPlanActive = useMemo(() => plan.status === "ACTIVE", [plan]);
+  const isPlanActive = useMemo(
+    () => ReverseMapping(SUBSCRIPTION_STATUS_MAP)[plan.status] === "ACTIVE",
+    [plan]
+  );
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
