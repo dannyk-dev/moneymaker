@@ -36,7 +36,7 @@ const CardsList = ({ cards }: Props) => {
     }
 
     return filterByUsage(cards, statusDisableCondition);
-  }, [tab, cards]);
+  }, [tab, cards, filterByUsage, filterByActivity]);
 
   return (
     <Tabs

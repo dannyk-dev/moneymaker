@@ -7,12 +7,6 @@ import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-type Props = {
-  searchParams: Promise<{
-    tab?: "inactive" | "used" | "unused";
-  }>;
-};
-
 async function CardsPage() {
   const { data, error } = await getCards();
 

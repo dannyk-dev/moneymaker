@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { IPlan, TSupabasePlan } from "@/utils/types";
+import { TSupabasePlan } from "@/utils/types";
 import {
   Activity,
   BookUser,

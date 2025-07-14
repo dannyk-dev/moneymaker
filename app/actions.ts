@@ -200,7 +200,7 @@ export const upsertPaypalPlan = async (plan: IPlan) => {
       status: SUBSCRIPTION_STATUS_MAP[status],
       user_id: userData.data.user!.id,
       description,
-      paypal_produt_id: plan.product_id,
+      paypal_produt_id: product_id,
       interval_count: billing_cycles[0].frequency.interval_count,
       interval_unit: interval,
       sequence: billing_cycles[0].sequence,
